@@ -1,0 +1,142 @@
+[
+  {
+    "text": "小明整理了书，他准备再次确认它。",
+    "coreference": [
+      {
+        "pronoun": "他",
+        "antecedent": "小明"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "书"
+      }
+    ],
+    "rewrite": "小明整理了书，小明准备再次确认书。"
+  },
+  {
+    "text": "小刚完成了作业，他准备再次确认它。",
+    "coreference": [
+      {
+        "pronoun": "他",
+        "antecedent": "小刚"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "作业"
+      }
+    ],
+    "rewrite": "小刚完成了作业，小刚准备再次确认作业。"
+  },
+  {
+    "text": "小强检查了礼物，他准备再次确认它。",
+    "coreference": [
+      {
+        "pronoun": "他",
+        "antecedent": "小强"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "礼物"
+      }
+    ],
+    "rewrite": "小强检查了礼物，小强准备再次确认礼物。"
+  },
+  {
+    "text": "小华保存了手机，他准备再次确认它。",
+    "coreference": [
+      {
+        "pronoun": "他",
+        "antecedent": "小华"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "手机"
+      }
+    ],
+    "rewrite": "小华保存了手机，小华准备再次确认手机。"
+  },
+  {
+    "text": "小李阅读了产品，他准备再次确认它。",
+    "coreference": [
+      {
+        "pronoun": "他",
+        "antecedent": "小李"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "产品"
+      }
+    ],
+    "rewrite": "小李阅读了产品，小李准备再次确认产品。"
+  },
+  {
+    "text": "张伟修改了系统，他准备再次确认它。",
+    "coreference": [
+      {
+        "pronoun": "他",
+        "antecedent": "张伟"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "系统"
+      }
+    ],
+    "rewrite": "张伟修改了系统，张伟准备再次确认系统。"
+  },
+  {
+    "text": "王强整理了项目，他准备再次确认它。",
+    "coreference": [
+      {
+        "pronoun": "他",
+        "antecedent": "王强"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "项目"
+      }
+    ],
+    "rewrite": "王强整理了项目，王强准备再次确认项目。"
+  },
+  {
+    "text": "陈明完成了文章，他准备再次确认它。",
+    "coreference": [
+      {
+        "pronoun": "他",
+        "antecedent": "陈明"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "文章"
+      }
+    ],
+    "rewrite": "陈明完成了文章，陈明准备再次确认文章。"
+  },
+  {
+    "text": "刘洋检查了报告，他准备再次确认它。",
+    "coreference": [
+      {
+        "pronoun": "他",
+        "antecedent": "刘洋"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "报告"
+      }
+    ],
+    "rewrite": "刘洋检查了报告，刘洋准备再次确认报告。"
+  },
+  {
+    "text": "吴磊保存了电脑，他准备再次确认它。",
+    "coreference": [
+      {
+        "pronoun": "他",
+        "antecedent": "吴磊"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "电脑"
+      }
+    ],
+    "rewrite": "吴磊保存了电脑，吴磊准备再次确认电脑。"
+  }
+]

@@ -3,17 +3,30 @@ from pathlib import Path
 
 import streamlit as st
 
-from src.evaluator import evaluate
-from src.resolver import CoreferenceResult, resolve_text
+from src.evaluator import ErrorCase, evaluate
+from src.nlp_backend import backend_status
+from src.resolver import CoreferenceResult, ResolverConfig, resolve_text
 from src.rewriter import rewrite_text
 
 
 BASE_DIR = Path(__file__).parent
-SAMPLES_PATH = BASE_DIR / "data" / "samples.json"
+DATA_DIR = BASE_DIR / "data"
+DATASETS = {
+    "演示集 demo": DATA_DIR / "demo.json",
+    "开发集 dev": DATA_DIR / "dev.json",
+    "测试集 test": DATA_DIR / "test.json",
+    "真实语料 real_corpus": DATA_DIR / "real_corpus.json",
+    "完整样本 samples": DATA_DIR / "samples.json",
+}
+BACKENDS = {
+    "规则版 baseline": "rule",
+    "HanLP 增强接口": "hanlp",
+    "LTP 增强接口": "ltp",
+}
 
 
-def load_samples() -> list[dict]:
-    with SAMPLES_PATH.open("r", encoding="utf-8") as file:
+def load_json(path: Path) -> list[dict]:
+    with path.open("r", encoding="utf-8") as file:
         return json.load(file)
 
 
@@ -23,21 +36,23 @@ def render_highlighted_text(text: str, results: list[CoreferenceResult]) -> str:
         spans.append((result.antecedent.start, result.antecedent.end, "entity"))
         spans.append((result.pronoun.start, result.pronoun.end, "pronoun"))
 
-    spans = sorted(spans, key=lambda item: item[0])
     html = ""
     cursor = 0
-    for start, end, kind in spans:
+    for start, end, kind in sorted(spans, key=lambda item: item[0]):
         if start < cursor:
             continue
         html += text[cursor:start]
         color = "#d8f3dc" if kind == "entity" else "#ffe5b4"
-        html += f"<mark style='background:{color};padding:2px 4px;border-radius:4px'>{text[start:end]}</mark>"
+        html += (
+            f"<mark style='background:{color};padding:2px 4px;"
+            f"border-radius:4px'>{text[start:end]}</mark>"
+        )
         cursor = end
     html += text[cursor:]
     return html
 
 
-def result_table(results: list[CoreferenceResult]) -> list[dict]:
+def relation_rows(results: list[CoreferenceResult]) -> list[dict]:
     return [
         {
             "代词": item.pronoun.text,
@@ -49,7 +64,7 @@ def result_table(results: list[CoreferenceResult]) -> list[dict]:
     ]
 
 
-def candidate_table(results: list[CoreferenceResult]) -> list[dict]:
+def candidate_rows(results: list[CoreferenceResult]) -> list[dict]:
     rows = []
     for result in results:
         for candidate in result.candidates:
@@ -65,49 +80,131 @@ def candidate_table(results: list[CoreferenceResult]) -> list[dict]:
     return rows
 
 
+def error_rows(errors: list[ErrorCase]) -> list[dict]:
+    return [
+        {
+            "错误类型": "；".join(item.error_types) or "未分类",
+            "原文": item.text,
+            "真实关系": "；".join(f"{p}->{a}" for p, a in item.gold),
+            "预测关系": "；".join(f"{p}->{a}" for p, a in item.predicted) or "无",
+            "漏判": "；".join(f"{p}->{a}" for p, a in item.missing) or "无",
+            "误判": "；".join(f"{p}->{a}" for p, a in item.extra) or "无",
+        }
+        for item in errors
+    ]
+
+
 st.set_page_config(page_title="中文指代消解与句子改写系统", layout="wide")
 st.title("中文指代消解与句子改写系统")
 
-samples = load_samples()
-sample_options = ["自定义输入"] + [sample["text"] for sample in samples]
-selected = st.selectbox("示例文本", sample_options)
+backend_label = st.sidebar.selectbox("NLP 后端", list(BACKENDS.keys()))
+backend = BACKENDS[backend_label]
+info = backend_status(backend)
+if info.available:
+    st.sidebar.success(info.message)
+else:
+    st.sidebar.warning(info.message)
+    st.sidebar.caption("当前仍使用规则版 baseline，后续安装模型后可接入真实抽取结果。")
 
-default_text = samples[0]["text"] if selected == "自定义输入" else selected
-text = st.text_area("输入中文文本", default_text, height=130)
+demo_samples = load_json(DATASETS["演示集 demo"])
+analysis_tab, evaluation_tab, ablation_tab = st.tabs(["单文本分析", "数据集评估", "消融实验"])
 
-if st.button("开始分析", type="primary"):
-    entities, pronouns, results = resolve_text(text)
-    rewritten = rewrite_text(text, results)
+with analysis_tab:
+    selected_sample = st.selectbox(
+        "示例文本",
+        ["自定义输入"] + [sample["text"] for sample in demo_samples],
+    )
+    default_text = demo_samples[0]["text"] if selected_sample == "自定义输入" else selected_sample
+    text = st.text_area("输入中文文本", default_text, height=130)
 
-    left, right = st.columns([1.2, 1])
+    if st.button("开始分析", type="primary"):
+        entities, pronouns, results = resolve_text(text, backend=backend)
+        rewritten = rewrite_text(text, results)
 
-    with left:
-        st.subheader("原文高亮")
-        st.markdown(render_highlighted_text(text, results), unsafe_allow_html=True)
+        left, right = st.columns([1.2, 1])
+        with left:
+            st.subheader("原文高亮")
+            st.markdown(render_highlighted_text(text, results), unsafe_allow_html=True)
+            st.subheader("改写结果")
+            st.success(rewritten)
 
-        st.subheader("改写结果")
-        st.success(rewritten)
+        with right:
+            st.subheader("识别结果")
+            st.write(f"候选实体：{', '.join(entity.text for entity in entities) or '无'}")
+            st.write(f"代词：{', '.join(pronoun.text for pronoun in pronouns) or '无'}")
 
-    with right:
-        st.subheader("识别结果")
-        st.write(f"候选实体：{', '.join(entity.text for entity in entities) or '无'}")
-        st.write(f"代词：{', '.join(pronoun.text for pronoun in pronouns) or '无'}")
+            st.subheader("指代关系")
+            rows = relation_rows(results)
+            if rows:
+                st.dataframe(rows, use_container_width=True, hide_index=True)
+            else:
+                st.info("暂未识别到可消解的指代关系。")
 
-        st.subheader("指代关系")
-        table = result_table(results)
-        if not table:
-            st.info("暂未识别到可消解的指代关系。")
+        st.subheader("候选实体得分")
+        candidates = candidate_rows(results)
+        if candidates:
+            st.dataframe(candidates, use_container_width=True, hide_index=True)
         else:
-            st.dataframe(table, use_container_width=True, hide_index=True)
+            st.info("暂无候选实体得分。")
 
-    st.subheader("候选实体得分")
-    candidates = candidate_table(results)
-    if not candidates:
-        st.info("暂无候选实体得分。")
+with evaluation_tab:
+    dataset_name = st.selectbox("选择评估数据集", list(DATASETS.keys()), index=2)
+    samples = load_json(DATASETS[dataset_name])
+    result = evaluate(samples, backend=backend)
+
+    st.subheader("评估指标")
+    cols = st.columns(5)
+    cols[0].metric("Accuracy", f"{result.accuracy:.2%}")
+    cols[1].metric("Precision", f"{result.precision:.2%}")
+    cols[2].metric("Recall", f"{result.recall:.2%}")
+    cols[3].metric("F1", f"{result.f1:.2%}")
+    cols[4].metric("正确/真实", f"{result.correct}/{result.total_gold}")
+
+    st.caption(f"预测关系数：{result.total_predicted}，样本数：{len(samples)}")
+
+    st.subheader("错误分析")
+    rows = error_rows(result.errors)
+    if rows:
+        st.dataframe(rows, use_container_width=True, hide_index=True)
     else:
-        st.dataframe(candidates, use_container_width=True, hide_index=True)
+        st.success("当前数据集没有错误样本。")
 
-st.divider()
-st.subheader("样本集基础评估")
-evaluation = evaluate(samples)
-st.metric("Accuracy", f"{evaluation.accuracy:.2%}", f"{evaluation.correct}/{evaluation.total}")
+with ablation_tab:
+    st.subheader("规则消融实验")
+    ablation_dataset = st.selectbox(
+        "选择消融数据集",
+        ["测试集 test", "真实语料 real_corpus", "完整样本 samples"],
+        index=1,
+    )
+    ablation_map = {
+        "测试集 test": DATASETS["测试集 test"],
+        "真实语料 real_corpus": DATASETS["真实语料 real_corpus"],
+        "完整样本 samples": DATASETS["完整样本 samples"],
+    }
+    samples = load_json(ablation_map[ablation_dataset])
+    experiments = [
+        ("完整规则", ResolverConfig()),
+        ("去掉距离规则", ResolverConfig(use_distance=False)),
+        ("去掉位置规则", ResolverConfig(use_position=False)),
+        ("去掉类型规则", ResolverConfig(use_type=False)),
+        ("去掉性别规则", ResolverConfig(use_gender=False)),
+        ("仅距离+位置", ResolverConfig(use_type=False, use_gender=False)),
+        ("仅类型+性别", ResolverConfig(use_distance=False, use_position=False)),
+    ]
+    baseline = evaluate(samples, backend=backend)
+    rows = []
+    for name, config in experiments:
+        result = evaluate(samples, backend=backend, config=config)
+        rows.append(
+            {
+                "实验": name,
+                "正确/真实": f"{result.correct}/{result.total_gold}",
+                "Precision": result.precision,
+                "Recall": result.recall,
+                "F1": result.f1,
+                "ΔF1": round(result.f1 - baseline.f1, 4),
+                "错误样本": len(result.errors),
+            }
+        )
+    st.dataframe(rows, use_container_width=True, hide_index=True)
+    st.caption("消融实验用于观察每类规则信号对最终效果的贡献，可直接作为报告中的实验补充。")

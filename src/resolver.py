@@ -4,6 +4,17 @@ from .mention_extractor import Mention, extract_mentions
 
 
 @dataclass(frozen=True)
+class ResolverConfig:
+    use_distance: bool = True
+    use_position: bool = True
+    use_type: bool = True
+    use_gender: bool = True
+
+
+DEFAULT_CONFIG = ResolverConfig()
+
+
+@dataclass(frozen=True)
 class CandidateScore:
     pronoun: Mention
     candidate: Mention
@@ -41,14 +52,25 @@ def _gender_score(pronoun: Mention, candidate: Mention) -> tuple[float, str]:
     return -0.35, "gender mismatch"
 
 
-def score_candidate(pronoun: Mention, candidate: Mention) -> CandidateScore:
+def score_candidate(
+    pronoun: Mention,
+    candidate: Mention,
+    config: ResolverConfig = DEFAULT_CONFIG,
+) -> CandidateScore:
     """Score one candidate antecedent for one pronoun."""
     distance = max(pronoun.start - candidate.end, 0)
-    distance_score = max(0.0, 0.3 - distance / 80)
-    position_score = 0.15 if candidate.end <= pronoun.start else -0.4
+    distance_score = max(0.0, 0.3 - distance / 80) if config.use_distance else 0.0
+    position_score = (0.15 if candidate.end <= pronoun.start else -0.4) if config.use_position else 0.0
 
-    type_value, type_reason = _type_score(pronoun, candidate)
-    gender_value, gender_reason = _gender_score(pronoun, candidate)
+    if config.use_type:
+        type_value, type_reason = _type_score(pronoun, candidate)
+    else:
+        type_value, type_reason = 0.0, "type disabled"
+
+    if config.use_gender:
+        gender_value, gender_reason = _gender_score(pronoun, candidate)
+    else:
+        gender_value, gender_reason = 0.0, "gender disabled"
 
     score = distance_score + position_score + type_value + gender_value
     reasons = [
@@ -60,9 +82,13 @@ def score_candidate(pronoun: Mention, candidate: Mention) -> CandidateScore:
     return CandidateScore(pronoun, candidate, round(score, 4), reasons)
 
 
-def resolve_text(text: str) -> tuple[list[Mention], list[Mention], list[CoreferenceResult]]:
+def resolve_text(
+    text: str,
+    backend: str = "rule",
+    config: ResolverConfig = DEFAULT_CONFIG,
+) -> tuple[list[Mention], list[Mention], list[CoreferenceResult]]:
     """Resolve coreference links with a lightweight rule-based strategy."""
-    entities, pronouns = extract_mentions(text)
+    entities, pronouns = extract_mentions(text, backend=backend)
     results: list[CoreferenceResult] = []
 
     for pronoun in pronouns:
@@ -73,7 +99,7 @@ def resolve_text(text: str) -> tuple[list[Mention], list[Mention], list[Corefere
             or (pronoun.start <= entity.start and entity.end <= pronoun.end)
         ]
         scored = sorted(
-            [score_candidate(pronoun, candidate) for candidate in candidates],
+            [score_candidate(pronoun, candidate, config=config) for candidate in candidates],
             key=lambda item: item.score,
             reverse=True,
         )

@@ -1,0 +1,426 @@
+[
+  {
+    "text": "教育部发布了新政策，该政策将支持高校建设人工智能课程。",
+    "coreference": [
+      {
+        "pronoun": "该政策",
+        "antecedent": "政策"
+      }
+    ],
+    "rewrite": "教育部发布了新政策，政策将支持高校建设人工智能课程。"
+  },
+  {
+    "text": "某企业上线了智能客服系统，该企业表示它可以减少人工成本。",
+    "coreference": [
+      {
+        "pronoun": "该企业",
+        "antecedent": "某企业"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "系统"
+      }
+    ],
+    "rewrite": "某企业上线了智能客服系统，某企业表示系统可以减少人工成本。"
+  },
+  {
+    "text": "学校开设了自然语言处理课程，该课程要求学生完成项目。",
+    "coreference": [
+      {
+        "pronoun": "该课程",
+        "antecedent": "课程"
+      }
+    ],
+    "rewrite": "学校开设了自然语言处理课程，课程要求学生完成项目。"
+  },
+  {
+    "text": "平台收到了一笔订单，该订单将在明天完成配送。",
+    "coreference": [
+      {
+        "pronoun": "该订单",
+        "antecedent": "订单"
+      }
+    ],
+    "rewrite": "平台收到了一笔订单，订单将在明天完成配送。"
+  },
+  {
+    "text": "研究团队提出了优化方案，该方案提升了系统响应速度。",
+    "coreference": [
+      {
+        "pronoun": "该方案",
+        "antecedent": "方案"
+      }
+    ],
+    "rewrite": "研究团队提出了优化方案，方案提升了系统响应速度。"
+  },
+  {
+    "text": "医院召开了线上会议，该会议讨论了预约系统升级问题。",
+    "coreference": [
+      {
+        "pronoun": "该会议",
+        "antecedent": "会议"
+      }
+    ],
+    "rewrite": "医院召开了线上会议，会议讨论了预约系统升级问题。"
+  },
+  {
+    "text": "学院举办了学术活动，该活动吸引了很多学生参加。",
+    "coreference": [
+      {
+        "pronoun": "该活动",
+        "antecedent": "活动"
+      }
+    ],
+    "rewrite": "学院举办了学术活动，活动吸引了很多学生参加。"
+  },
+  {
+    "text": "李娜采访了张伟，她认为他提出的方案很有价值。",
+    "coreference": [
+      {
+        "pronoun": "她",
+        "antecedent": "李娜"
+      },
+      {
+        "pronoun": "他",
+        "antecedent": "张伟"
+      }
+    ],
+    "rewrite": "李娜采访了张伟，李娜认为张伟提出的方案很有价值。"
+  },
+  {
+    "text": "王强把报告发给王芳，她修改了它。",
+    "coreference": [
+      {
+        "pronoun": "她",
+        "antecedent": "王芳"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "报告"
+      }
+    ],
+    "rewrite": "王强把报告发给王芳，王芳修改了报告。"
+  },
+  {
+    "text": "清华大学更新了课程平台，该校表示它将服务更多学生。",
+    "coreference": [
+      {
+        "pronoun": "该校",
+        "antecedent": "清华大学"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "平台"
+      }
+    ],
+    "rewrite": "清华大学更新了课程平台，清华大学表示平台将服务更多学生。"
+  },
+  {
+    "text": "银行推出了金融产品，该产品面向年轻用户。",
+    "coreference": [
+      {
+        "pronoun": "该产品",
+        "antecedent": "产品"
+      }
+    ],
+    "rewrite": "银行推出了金融产品，产品面向年轻用户。"
+  },
+  {
+    "text": "政府发布了扶持政策，该政策覆盖中小企业。",
+    "coreference": [
+      {
+        "pronoun": "该政策",
+        "antecedent": "政策"
+      }
+    ],
+    "rewrite": "政府发布了扶持政策，政策覆盖中小企业。"
+  },
+  {
+    "text": "医院升级了预约系统，该系统缩短了排队时间。",
+    "coreference": [
+      {
+        "pronoun": "该系统",
+        "antecedent": "系统"
+      }
+    ],
+    "rewrite": "医院升级了预约系统，系统缩短了排队时间。"
+  },
+  {
+    "text": "学校公布了课程通知，该通知提醒学生按时选课。",
+    "coreference": [
+      {
+        "pronoun": "该通知",
+        "antecedent": "通知"
+      }
+    ],
+    "rewrite": "学校公布了课程通知，通知提醒学生按时选课。"
+  },
+  {
+    "text": "研究团队完成了实验报告，该报告记录了模型结果。",
+    "coreference": [
+      {
+        "pronoun": "该报告",
+        "antecedent": "报告"
+      }
+    ],
+    "rewrite": "研究团队完成了实验报告，报告记录了模型结果。"
+  },
+  {
+    "text": "某企业启动了研发项目，该项目计划持续三个月。",
+    "coreference": [
+      {
+        "pronoun": "该项目",
+        "antecedent": "项目"
+      }
+    ],
+    "rewrite": "某企业启动了研发项目，项目计划持续三个月。"
+  },
+  {
+    "text": "平台优化了推荐方案，该方案提高了用户点击率。",
+    "coreference": [
+      {
+        "pronoun": "该方案",
+        "antecedent": "方案"
+      }
+    ],
+    "rewrite": "平台优化了推荐方案，方案提高了用户点击率。"
+  },
+  {
+    "text": "学院组织了分享会议，该会议介绍了课程项目经验。",
+    "coreference": [
+      {
+        "pronoun": "该会议",
+        "antecedent": "会议"
+      }
+    ],
+    "rewrite": "学院组织了分享会议，会议介绍了课程项目经验。"
+  },
+  {
+    "text": "学校举办了竞赛活动，该活动鼓励学生组队参赛。",
+    "coreference": [
+      {
+        "pronoun": "该活动",
+        "antecedent": "活动"
+      }
+    ],
+    "rewrite": "学校举办了竞赛活动，活动鼓励学生组队参赛。"
+  },
+  {
+    "text": "平台处理了一笔订单，该订单因为地址错误被延迟。",
+    "coreference": [
+      {
+        "pronoun": "该订单",
+        "antecedent": "订单"
+      }
+    ],
+    "rewrite": "平台处理了一笔订单，订单因为地址错误被延迟。"
+  },
+  {
+    "text": "银行推出了金融产品，该产品面向年轻用户。",
+    "coreference": [
+      {
+        "pronoun": "该产品",
+        "antecedent": "产品"
+      }
+    ],
+    "rewrite": "银行推出了金融产品，产品面向年轻用户。"
+  },
+  {
+    "text": "政府发布了扶持政策，该政策覆盖中小企业。",
+    "coreference": [
+      {
+        "pronoun": "该政策",
+        "antecedent": "政策"
+      }
+    ],
+    "rewrite": "政府发布了扶持政策，政策覆盖中小企业。"
+  },
+  {
+    "text": "医院升级了预约系统，该系统缩短了排队时间。",
+    "coreference": [
+      {
+        "pronoun": "该系统",
+        "antecedent": "系统"
+      }
+    ],
+    "rewrite": "医院升级了预约系统，系统缩短了排队时间。"
+  },
+  {
+    "text": "学校公布了课程通知，该通知提醒学生按时选课。",
+    "coreference": [
+      {
+        "pronoun": "该通知",
+        "antecedent": "通知"
+      }
+    ],
+    "rewrite": "学校公布了课程通知，通知提醒学生按时选课。"
+  },
+  {
+    "text": "研究团队完成了实验报告，该报告记录了模型结果。",
+    "coreference": [
+      {
+        "pronoun": "该报告",
+        "antecedent": "报告"
+      }
+    ],
+    "rewrite": "研究团队完成了实验报告，报告记录了模型结果。"
+  },
+  {
+    "text": "某企业启动了研发项目，该项目计划持续三个月。",
+    "coreference": [
+      {
+        "pronoun": "该项目",
+        "antecedent": "项目"
+      }
+    ],
+    "rewrite": "某企业启动了研发项目，项目计划持续三个月。"
+  },
+  {
+    "text": "平台优化了推荐方案，该方案提高了用户点击率。",
+    "coreference": [
+      {
+        "pronoun": "该方案",
+        "antecedent": "方案"
+      }
+    ],
+    "rewrite": "平台优化了推荐方案，方案提高了用户点击率。"
+  },
+  {
+    "text": "学院组织了分享会议，该会议介绍了课程项目经验。",
+    "coreference": [
+      {
+        "pronoun": "该会议",
+        "antecedent": "会议"
+      }
+    ],
+    "rewrite": "学院组织了分享会议，会议介绍了课程项目经验。"
+  },
+  {
+    "text": "学校举办了竞赛活动，该活动鼓励学生组队参赛。",
+    "coreference": [
+      {
+        "pronoun": "该活动",
+        "antecedent": "活动"
+      }
+    ],
+    "rewrite": "学校举办了竞赛活动，活动鼓励学生组队参赛。"
+  },
+  {
+    "text": "平台处理了一笔订单，该订单因为地址错误被延迟。",
+    "coreference": [
+      {
+        "pronoun": "该订单",
+        "antecedent": "订单"
+      }
+    ],
+    "rewrite": "平台处理了一笔订单，订单因为地址错误被延迟。"
+  },
+  {
+    "text": "银行推出了金融产品，该产品面向年轻用户。",
+    "coreference": [
+      {
+        "pronoun": "该产品",
+        "antecedent": "产品"
+      }
+    ],
+    "rewrite": "银行推出了金融产品，产品面向年轻用户。"
+  },
+  {
+    "text": "政府发布了扶持政策，该政策覆盖中小企业。",
+    "coreference": [
+      {
+        "pronoun": "该政策",
+        "antecedent": "政策"
+      }
+    ],
+    "rewrite": "政府发布了扶持政策，政策覆盖中小企业。"
+  },
+  {
+    "text": "医院升级了预约系统，该系统缩短了排队时间。",
+    "coreference": [
+      {
+        "pronoun": "该系统",
+        "antecedent": "系统"
+      }
+    ],
+    "rewrite": "医院升级了预约系统，系统缩短了排队时间。"
+  },
+  {
+    "text": "学校公布了课程通知，该通知提醒学生按时选课。",
+    "coreference": [
+      {
+        "pronoun": "该通知",
+        "antecedent": "通知"
+      }
+    ],
+    "rewrite": "学校公布了课程通知，通知提醒学生按时选课。"
+  },
+  {
+    "text": "研究团队完成了实验报告，该报告记录了模型结果。",
+    "coreference": [
+      {
+        "pronoun": "该报告",
+        "antecedent": "报告"
+      }
+    ],
+    "rewrite": "研究团队完成了实验报告，报告记录了模型结果。"
+  },
+  {
+    "text": "某企业启动了研发项目，该项目计划持续三个月。",
+    "coreference": [
+      {
+        "pronoun": "该项目",
+        "antecedent": "项目"
+      }
+    ],
+    "rewrite": "某企业启动了研发项目，项目计划持续三个月。"
+  },
+  {
+    "text": "平台优化了推荐方案，该方案提高了用户点击率。",
+    "coreference": [
+      {
+        "pronoun": "该方案",
+        "antecedent": "方案"
+      }
+    ],
+    "rewrite": "平台优化了推荐方案，方案提高了用户点击率。"
+  },
+  {
+    "text": "上海市启动了城市更新计划，该城市希望它改善居民生活环境。",
+    "coreference": [
+      {
+        "pronoun": "该城市",
+        "antecedent": "上海市"
+      },
+      {
+        "pronoun": "它",
+        "antecedent": "计划"
+      }
+    ],
+    "rewrite": "上海市启动了城市更新计划，上海市希望计划改善居民生活环境。"
+  },
+  {
+    "text": "小明告诉小刚，他已经完成了作业。",
+    "coreference": [
+      {
+        "pronoun": "他",
+        "antecedent": "小刚"
+      }
+    ],
+    "rewrite": "小明告诉小刚，小刚已经完成了作业。"
+  },
+  {
+    "text": "王芳采访了李娜，她提到这项活动很有意义。",
+    "coreference": [
+      {
+        "pronoun": "她",
+        "antecedent": "李娜"
+      },
+      {
+        "pronoun": "这项活动",
+        "antecedent": "活动"
+      }
+    ],
+    "rewrite": "王芳采访了李娜，李娜提到活动很有意义。"
+  }
+]

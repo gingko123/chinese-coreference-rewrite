@@ -1,15 +1,6 @@
 import re
-from dataclasses import dataclass
 
-
-@dataclass(frozen=True)
-class Mention:
-    text: str
-    start: int
-    end: int
-    label: str
-    gender: str = "unknown"
-    number: str = "singular"
+from .mention_extractor_types import Mention
 
 
 PRONOUNS: dict[str, dict[str, str]] = {
@@ -25,6 +16,15 @@ PRONOUNS: dict[str, dict[str, str]] = {
     "该报告": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "singular"},
     "该平台": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "singular"},
     "该通知": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "singular"},
+    "该政策": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "singular"},
+    "该方案": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "singular"},
+    "该课程": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "singular"},
+    "该活动": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "singular"},
+    "这项活动": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "singular"},
+    "该会议": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "singular"},
+    "该订单": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "singular"},
+    "该城市": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "singular"},
+    "该企业": {"label": "ORG_PRONOUN", "gender": "neutral", "number": "singular"},
     "该团队": {"label": "ORG_PRONOUN", "gender": "neutral", "number": "singular"},
     "这些电脑": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "plural"},
     "这些作业": {"label": "OBJECT_PRONOUN", "gender": "neutral", "number": "plural"},
@@ -78,10 +78,18 @@ OBJECT_WORDS = {
     "电脑",
     "钥匙",
     "论文",
+    "政策",
+    "方案",
+    "课程",
+    "活动",
+    "会议",
+    "订单",
+    "城市",
+    "计划",
 }
 
-ORG_WORDS = {"学校", "医院", "银行", "政府", "团队", "研究团队"}
-ORG_SUFFIXES = ("公司", "大学", "学校", "医院", "银行", "政府", "团队")
+ORG_WORDS = {"学校", "医院", "银行", "政府", "团队", "研究团队", "企业"}
+ORG_SUFFIXES = ("公司", "大学", "学校", "医院", "银行", "政府", "团队", "企业")
 ORG_TRIM_MARKERS = ("把", "给", "买", "了", "发布", "加入", "完成", "表示", "认为")
 
 
@@ -166,6 +174,24 @@ def extract_entities(text: str) -> list[Mention]:
     return sorted(mentions, key=lambda item: item.start)
 
 
-def extract_mentions(text: str) -> tuple[list[Mention], list[Mention]]:
+def extract_mentions(text: str, backend: str = "rule") -> tuple[list[Mention], list[Mention]]:
     """Return entity candidates and pronoun mentions."""
-    return extract_entities(text), extract_pronouns(text)
+    entities = extract_entities(text)
+    if backend != "rule":
+        from .nlp_backend import extract_backend_entities
+
+        backend_result = extract_backend_entities(text, backend)
+        entities = _merge_entities(entities, backend_result.entities)
+    return entities, extract_pronouns(text)
+
+
+def _merge_entities(primary: list[Mention], extra: list[Mention]) -> list[Mention]:
+    """Merge backend entities without duplicating spans."""
+    seen = {(item.start, item.end, item.label) for item in primary}
+    merged = list(primary)
+    for item in extra:
+        key = (item.start, item.end, item.label)
+        if key not in seen:
+            merged.append(item)
+            seen.add(key)
+    return sorted(merged, key=lambda item: item.start)
